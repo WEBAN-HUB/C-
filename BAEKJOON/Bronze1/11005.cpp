@@ -19,59 +19,25 @@ using namespace std;
 
 int main()
 {
-    int N = 0, B = 0;
+    int n, b;
+    cin >> n >> b;
 
-    cin >> N >> B;
-    string output = "";
-    int i = 1;
-    int div = 0;
-    while (N > 0)
+    string b_num;
+    while (n != 0)
     {
-        // 제곱할 때 (int) 형변환 필요
-        // 인자, 리턴 다 double 형이기 때문
-        // ceil = 소숫점 위로 반올림
-        div = ceil(pow(B, i));
-        if (div > N)
+        int tmp = n % b;
+        if (tmp > 9)
         {
-            int remain = (int)(((double)N / (double)div)*B);
-            
-            if (remain < 10)
-            {
-                output.insert(0, to_string(remain));
-                break;
-            }
-            else
-            {
-                char ch = 'A'+(remain-10);
-                // insert(위치,사이즈,넣을문자or문자열)
-                output.insert(0, 1,ch);
-                break;
-            }
+            tmp = tmp - 10 + 'A';
+            b_num += tmp;
         }
         else
         {
-            int remain = N % div;
-            int addch = remain / ceil(pow(B, i-1));
-            if (remain != 0)
-            {
-                if (addch < 10)
-                {
-                    output.insert(0, to_string(addch));
-                    N -= remain;
-                }
-                else
-                {
-                    char ch = 'A'+(addch-10);
-                    output.insert(0, 1,ch);
-                    N -= remain;
-                }
-            }
-            else
-            {
-                output.insert(0, "0");
-            }
+            b_num += ('0' + tmp);
         }
-        i++;
+        n /= b;
     }
-    cout << output;
+    reverse(b_num.begin(), b_num.end());
+
+    cout << b_num << '\n';
 }
