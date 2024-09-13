@@ -21,47 +21,24 @@ using namespace std;
 
 int main()
 {
-    int x = 0, l = 1, r = 1;
+    int line = 1;
+    int x;
     cin >> x;
-    bool down = true;
-    bool mv = true;
-    if (x != 1)
+
+    // 예를 들어 x값으로 5가 입력되어있을 경우,
+    // 5-1 > 0 -> x=4, line =2
+    // 4-2 > 0 -> x=2, line =3
+    // 2-3 > 0 -> 루프 끝
+    // 3번 째 라인의 두 번째 순서의 위치
+    while(x - line > 0)
     {
-        for (int i = 1; i < x; i++)
-        {
-            if (down)
-            {
-                if (mv)
-                {
-                    r++;
-                    mv = false;
-                    continue;
-                }
-                l++;
-                r--;
-                if (r == 1)
-                {
-                    down = false;
-                    mv = true;
-                }
-            }
-            else
-            {
-                if (mv)
-                {
-                    l++;
-                    mv = false;
-                    continue;
-                }
-                r++;
-                l--;
-                if (l == 1)
-                {
-                    down = true;
-                    mv = true;
-                }
-            }
-        }
+        x -= line;
+        line++;
     }
-    cout << l << "/" << r;
+
+    // 대각선 홀수일 때
+    if(line % 2) 
+        cout << line + 1 - x << '/' << x;
+    else
+        cout << x << '/' << line + 1 - x;
 }
