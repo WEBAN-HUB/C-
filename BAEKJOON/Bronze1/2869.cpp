@@ -23,19 +23,14 @@ int main()
     int A, B, V;
 
     cin >> A >> B >> V;
-    int res = 0;
+    int div = V/(A-B);
+    int remain = V %(A-B);
 
-    while(true)
-    {
-        V -= A;
-        res++;
-        if(0 >= V)
-        {
-            break;
-        }
-
-        V +=B;
-    }
-    cout << res;
-
+    if(div == 0)
+        div = 1;
+    else if(remain == 0)
+        div = V-B;
+    else if(remain != 0)
+        div++;
+    cout << div;
 }
