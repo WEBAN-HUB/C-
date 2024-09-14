@@ -23,14 +23,9 @@ int main()
     int A, B, V;
 
     cin >> A >> B >> V;
-    int div = V/(A-B);
-    int remain = V %(A-B);
-
-    if(div == 0)
-        div = 1;
-    else if(remain == 0)
-        div = V-B;
-    else if(remain != 0)
+    int div = (V-A)/(A-B);
+    int remain = (V-A)%(A-B);
+    if(remain != 0)
         div++;
-    cout << div;
+    cout << to_string(A >= V ? 1 : div+1);
 }
