@@ -7,33 +7,15 @@
 // 출력
 // 첫째 줄에 문제의 정답을 출력한다.
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 int main()
 {
-    int x, y, w, h,min=0;
+    int x, y, w, h;
 
     cin >> x >> y >> w >> h;
-
-    if(w - x < x)
-    {
-        min = w -x;
-    }
-    else
-    {
-        min = x;
-    }
-
-
-    if( h - y < y && h - y < min)
-    {
-        min = h - y;
-    }
-    else
-    {
-        if(y < min)
-            min = y;
-    }
-
-    cout << min;
+    // algorithm include 후 min, max 함수를 활용하여 최솟값 최댓값을 얻을 수 있다.
+    // 인자값으로 여러 개의 인자를 받을 겨우 아래와 같이 활용
+    cout << min({w-x,x,h-y,y});
 }
