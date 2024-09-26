@@ -1,2 +1,2 @@
 # C-
-C++ study
+C++ Coding Test Study Repo
