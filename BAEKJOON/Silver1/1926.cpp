@@ -26,22 +26,20 @@
 #include <queue>
 using namespace std;
 
-const int dy[4] = {0, 1, 0, -1};
-const int dx[4] = {1, 0, -1, 0};
+int n = 0, m = 0, count = 0, maxValue = 0;
+vector<vector<int>> iVec;
+vector<vector<bool>> boolMap;
 
-int n = 0, m = 0, count = 0, maxV = 0;
-
-vector<vector<int>> vMap;
-vector<vector<bool>> visited;
+const int ny[4] = {0, 1, 0, -1};
+const int nx[4] = {1, 0, -1, 0};
 
 void BFS(int row, int col)
 {
     count++;
     int result = 1;
-    // BFS를 돌 q를 생성
-    queue<pair<int, int>> q;
+    queue<pair<int,int>> q;
     q.push({row,col});
-    visited[row][col] = true;
+    boolMap[row][col] = true;
 
     while(!q.empty())
     {
@@ -49,42 +47,27 @@ void BFS(int row, int col)
         int x = q.front().second;
         q.pop();
 
-        // 현재 위치 출력
-        // cout << "현재 위치: (" << y << ", " << x << ")" << endl;
-
-        // 상하좌우로 이동
         for(int i = 0; i < 4; i++)
         {
-            int ny = y + dy[i];
-            int nx = x + dx[i];
-            
-            // 격자 범위 내에 있고 방문하지 않은 곳이라면
-            if(ny >= 0 && ny < n && nx >= 0 && nx < m && !visited[ny][nx])
+            int my = y + ny[i];
+            int mx = x + nx[i];
+
+            if(my >= 0 && my < n && mx >= 0 && mx < m && !boolMap[my][mx] && iVec[my][mx] == 1)
             {
-                // 1이라면 그림이 맞다
-                if(vMap[ny][nx] == 1)
-                {
-                    // 현재 그림 위치 출력
-                    // cout << "그림 위치: (" << ny << ", " << nx << ")" << endl;
-                    visited[ny][nx] = true;
-                    q.push({ny,nx});
-                    result += 1;
-                }
+                boolMap[my][mx] = true;
+                q.push({my,mx});
+                result++;
             }
         }
     }
-
-    maxV = max(maxV,result);
+    maxValue = max(maxValue,result);
 }
 
 int main()
 {
     cin >> n >> m;
+    boolMap.assign(n,vector<bool>(m,false));
 
-    // for문 없이 2차원 배열 초기화
-    visited.assign(n, vector<bool>(m,false));
-
-    // 2차원 행렬에서는 보통 y(row)를 기준으로 먼저 돈다.
     for(int i = 0; i < n; i++)
     {
         vector<int> col;
@@ -94,19 +77,19 @@ int main()
             cin >> value;
             col.push_back(value);
         }
-        vMap.push_back(col);
+        iVec.push_back(col);
     }
 
-    for(int i =0; i < n; i++)
+    for(int i = 0; i < n; i++)
     {
         for(int j = 0; j < m; j++)
         {
-            if(!visited[i][j] && vMap[i][j] == 1)
+            if(!boolMap[i][j] && iVec[i][j] == 1)
             {
                 BFS(i,j);
             }
         }
     }
-    
-    cout << count << "\n" << maxV;
+
+    cout << count << "\n" << maxValue;
 }
