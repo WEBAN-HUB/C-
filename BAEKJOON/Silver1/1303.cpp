@@ -10,6 +10,7 @@
 // 첫 번째 줄에 당신의 병사의 위력의 합과 적국의 병사의 위력의 합을 출력한다.
 
 #include <iostream>
+#include <queue>
 #include <string>
 
 using namespace std;
@@ -48,6 +49,39 @@ void DFS(int y, int x, char findC)
     }
 }
 
+void BFS(int y, int x, char findC)
+{
+    queue<pair<int,int>> q;
+    q.push({y,x});
+    visited[y][x] = true;
+    count++;
+    while(!q.empty())
+    {
+        int qy = q.front().first;
+        int qx = q.front().second;
+        q.pop();
+
+        for(int i = 0; i < 4; i++)
+        {
+            int ny = qy + my[i];
+            int nx = qx + mx[i];
+            if(nx < 0 || ny < 0 || nx >= n || ny >= m)
+            {
+                continue;
+            }
+            else
+            {
+                if(soldiers[ny][nx] == findC && visited[ny][nx] == false)
+                {
+                    q.push({ny,nx});
+                    visited[ny][nx] = true;
+                    count++;
+                }
+            }
+        }
+    }
+}
+
 int main()
 {
 
@@ -73,7 +107,8 @@ int main()
             {
                 count = 0;
                 char findC = soldiers[i][j];
-                DFS(i,j,findC);
+                //DFS(i,j,findC);
+                BFS(i,j,findC);
                 if(findC == 'W')
                 {
                     mp += count * count;
