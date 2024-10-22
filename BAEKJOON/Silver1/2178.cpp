@@ -17,6 +17,7 @@
 
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <string>
 #include <algorithm>
 using namespace std;
@@ -25,10 +26,22 @@ const int MAX = 100;
 int imap[MAX][MAX];
 bool visited[MAX][MAX];
 int n, m; // n = y m = x
-vector<int> dist;
+vector<int> distList;
+int dist;
 
 int my[4] = {0,1,0,-1};
 int mx[4] = {1,0,-1,0};
+
+struct qnode
+{
+    int y, x, sum;
+    qnode(int inY, int inX, int inSum)
+    {
+        y = inY;
+        x = inX;
+        sum = inSum;
+    }
+};
 
 void DFS(int y, int x, int sum)
 {
@@ -36,7 +49,7 @@ void DFS(int y, int x, int sum)
     sum++;
     if(y == n-1 && x == m-1)
     {
-        dist.push_back(sum);
+        distList.push_back(sum);
         return;
     }
     for(int i = 0; i < 4; i++)
@@ -50,6 +63,43 @@ void DFS(int y, int x, int sum)
             {
                 DFS(curY,curX,sum);
                 visited[curY][curX] = false;
+            }
+        }
+    }
+}
+
+void BFS()
+{
+    vector<int> distList;
+    queue<qnode> q;
+    qnode firstNode(0,0,1);
+    visited[0][0] = true;
+    q.push(firstNode);
+
+    while(!q.empty())
+    {
+        qnode curNode = q.front();
+        q.pop();
+        if(curNode.y == n-1 && curNode.x == m-1)
+        {
+            dist = curNode.sum;
+            return;
+        }
+                    
+
+        for(int i = 0; i < 4; i++)
+        {
+            int ny = curNode.y + my[i];
+            int nx = curNode.x + mx[i];
+            if(ny >= 0 && nx >= 0 && ny < n && nx < m)
+            {
+                if(imap[ny][nx] == 1 && !visited[ny][nx])
+                {
+                    qnode nextNode(ny,nx,curNode.sum+1);
+                    visited[ny][nx] = true;
+                    q.push(nextNode);
+                    
+                }
             }
         }
     }
@@ -69,7 +119,9 @@ int main()
         }
     }
 
-    DFS(0,0,0);
-    sort(dist.begin(),dist.end());
-    cout << dist[0];
+    //DFS(0,0,0);
+    //sort(distList.begin(),distList.end());
+    //cout << distList[0];
+    BFS();
+    cout << dist;
 }
