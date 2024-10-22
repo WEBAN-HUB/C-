@@ -15,21 +15,19 @@
 using namespace std;
 
 vector<vector<int>> graph;
-vector<int> visited;
+vector<bool> visited;
 
 void DFS(int v)
 {
-    visited.push_back(v);
-    if(graph[v].size() != 0)
+    cout << v << " ";
+    visited[v] = true;
+    for(int i =0; i < graph[v].size(); i++)
     {
-        for(int i =0; i < graph[v].size(); i++)
+        int value = graph[v][i];
+        if(!visited[value])
         {
-            int value = graph[v][i];
-            if(count(visited.begin(),visited.end(),value) < 1)
-            {
-                DFS(value);
-            }
-        }
+            DFS(value);
+        } 
     }
 }
 
@@ -37,21 +35,22 @@ void BFS(int v)
 {
     queue<int> q;
     q.push(v);
-    visited.push_back(v);
+    visited[v] = true;
 
     while(!q.empty())
     {
         int a = q.front();
         q.pop();
+        cout << a << " ";
         if(graph[a].size() != 0)
         {
             for(int i =0; i < graph[a].size();i++)
             {
                 int value = graph[a][i];
-                if(count(visited.begin(),visited.end(),value) < 1)
+                if(!visited[value])
                 {
                     q.push(value);
-                    visited.push_back(value);
+                    visited[value] = true;
                 }
             }
         }
@@ -70,20 +69,15 @@ int main()
         cin >> from >> to;
         graph[from].push_back(to);
         graph[to].push_back(from);
-        sort(graph[from].begin(),graph[from].end());
-        sort(graph[to].begin(),graph[to].end());
     }
 
+    for(int i = 1; i <= n; i++)
+    {
+        sort(graph[i].begin(),graph[i].end());
+    }
+    visited.assign(n+1,false); // 방문 여부를 기록할 벡터 초기화
     DFS(v);
-    for(auto v : visited)
-    {
-        cout << v << " ";
-    }
     cout << endl;
-    visited.clear();
+    visited.assign(n+1,false);
     BFS(v);
-    for(auto v : visited)
-    {
-        cout << v << " ";
-    }
 }
