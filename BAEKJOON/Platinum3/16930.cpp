@@ -23,93 +23,62 @@
 
 using namespace std;
 
-const int MAX = 1000;
+#define INF 2e9
+
+const int MAX = 1001;
 char cmap[MAX][MAX];
-bool visited[MAX][MAX];
+int visited[MAX][MAX];
 
 int x1,y1,x2,y2,n,m,k;
 int time;
 struct qnode
 {
-    pair<int,int> prev;
-    int x, y, time, limit;
-    qnode(int inX, int inY, int inTime, int inLimit)
+    int x, y, time;
+    qnode(int inX, int inY, int inTime)
     {
         x = inX;
         y = inY;
         time = inTime;
-        limit = inLimit;
     };
 };
 
 int mx[4] = {0,1,0,-1};
 int my[4] = {1,0,-1,0};
 
-int BFS(int x, int y)
+void BFS(int x, int y)
 {
     queue<qnode> q;
-    qnode firstNode(x,y,0,1);
+    qnode firstNode(x,y,0);
     visited[x][y] = true;
-    firstNode.prev = {0,0};
     q.push(firstNode);
     while(!q.empty())
     {
         qnode curN = q.front();
         q.pop();
 
-        if(curN.x == x2 && curN.y == y2)
+        for (int i = 0; i < 4; i++)
         {
-            return curN.time;
-        }
-
-        for(int i =0;i < 4;i++)
-        {
-            int nx = curN.x + mx[i];
-            int ny = curN.y + my[i];
-            if(nx > 0 && ny > 0 && nx < n+1 && ny < m+1)
+            for (int step = 1; step < k + 1; step++)
             {
-                if(cmap[nx][ny] == '.' && !visited[nx][ny])
+                int nx = curN.x + mx[i] * step;
+                int ny = curN.y + my[i] * step;
+
+                if (nx < 1 || ny < 1 || nx > n || ny > m || cmap[nx][ny] != '.' || visited[nx][ny] < curN.time + 1)
                 {
-                    if(curN.prev == pair<int,int>(0,0))
-                    {
-                        if((mx[i] != curN.prev.first && my[i] != curN.prev.second) || curN.limit+1 > k)
-                        {
-                            qnode nextNode(nx,ny,curN.time+1,1);
-                            nextNode.prev = {mx[i],my[i]};
-                            visited[nx][ny] = true;
-                            q.push(nextNode);
-                        }
-                        else
-                        {
-                            qnode nextNode(nx,ny,curN.time+1,curN.limit+1);
-                            nextNode.prev = {mx[i],my[i]};
-                            visited[nx][ny] = true;
-                            q.push(nextNode);
-                        }
-                    }
-                    else
-                    {
-                        if((mx[i] != curN.prev.first && my[i] != curN.prev.second) || curN.limit+1 > k)
-                        {
-                            qnode nextNode(nx,ny,curN.time+1,1);
-                            nextNode.prev = {mx[i],my[i]};
-                            visited[nx][ny] = true;
-                            q.push(nextNode);
-                        }
-                        else
-                        {
-                            qnode nextNode(nx,ny,curN.time,curN.limit+1);
-                            nextNode.prev = {mx[i],my[i]};
-                            visited[nx][ny] = true;
-                            q.push(nextNode);
-                        }
-                    }
+                    break;
                 }
+
+                if (visited[nx][ny] == INF)
+                {
+                    qnode nextNode(nx, ny, curN.time + 1);
+                    visited[nx][ny] = nextNode.time;
+                    q.push(nextNode);
+                }
+
             }
         }
     }
 
-    return -1;
 }
 
 int main()
@@ -123,9 +92,13 @@ int main()
         for(int j = 1; j < m+1;j++)
         {
             cmap[i][j] = input[j-1];
-            visited[i][j] = false;
+            visited[i][j] = INF;
         }
     }
     cin >> x1 >> y1 >> x2 >> y2;
-    cout << BFS(x1,y1);
+    BFS(x1,y1);
+    int result = visited[x2][y2] == INF ? -1 : visited[x2][y2];
+    cout << result;
+
+    return 0;
 }
